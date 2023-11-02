@@ -15,6 +15,7 @@ const WeatherApp = () => {
     const [wicon, setWicon] = useState(cloud_icon);
     const [weatherData, setWeatherData] = useState(null);
     const [city, setCity] = useState('London');
+    const [formattedTime, setFormattedTime] = useState('');
 
     useEffect(() => {
         // Load initial weather data for the default city (London).
@@ -38,6 +39,19 @@ const WeatherApp = () => {
 
             // Determine the weather icon based on the received weather condition.
             updateWeatherIcon(data.weather[0].icon);
+
+            // Extract the timezone offset from your API response
+            const timezoneOffset = data.timezone;
+            // Create a Date object for the local time
+            const localTime = new Date(new Date().getTime() + timezoneOffset * 1000); // Convert seconds to milliseconds
+
+            // Format the local time as a string (e.g., HH:MM AM/PM)
+            const options = { hour: 'numeric', minute: 'numeric', hour12: true };
+            const timeString = localTime.toLocaleTimeString(undefined, options);
+            setFormattedTime(timeString); // Update the state with the formatted time
+
+
+
         } else {
             console.log("No location data found.");
         }
@@ -87,6 +101,27 @@ const WeatherApp = () => {
         fetchData(element[0].value);
     };
 
+
+
+    // const timezoneOffset = data.timezone;
+    // const localTime = new Date(new Date().getTime() + timezoneOffset * 1000); // Convert seconds to milliseconds
+    // const options = { hour: 'numeric', minute: 'numeric', hour12: true };
+    // const formattedTime = localTime.toLocaleTimeString(undefined, options);
+
+    // // Display the local time in your component
+    // <div className="weatherTime">{formattedTime}</div>
+
+
+
+
+
+
+
+
+
+
+
+
     return (
         <div className='container'>
             <div className="top-bar">
@@ -102,6 +137,7 @@ const WeatherApp = () => {
                 <>
                     <div className="weatherTemp">{Math.floor(weatherData.main.temp)}°C</div>
                     <div className="weatherLocation">{weatherData.name}</div>
+                    <div className="weatherTime">{formattedTime}</div>
                 </>
             )}
             <div className="dataContainer">
