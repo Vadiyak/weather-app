@@ -16,6 +16,7 @@ const WeatherApp = () => {
     const [weatherData, setWeatherData] = useState(null);
     const [city, setCity] = useState('London');
     const [formattedTime, setFormattedTime] = useState('');
+    const [isDaytime, setIsDaytime] = useState(false);
 
     useEffect(() => {
         // Load initial weather data for the default city (London).
@@ -46,8 +47,12 @@ const WeatherApp = () => {
             const localTime = new Date(new Date().getTime() + timezoneOffset * 1000); // Convert seconds to milliseconds
 
             // Format the local time as a string (e.g., HH:MM AM/PM)
-            const options = { hour: 'numeric', minute: 'numeric', hour12: true };
+            // const options = { hour: 'numeric', minute: 'numeric', hour12: true };
+            const options = { hour: '2-digit', minute: '2-digit', hour12: false };
             const timeString = localTime.toLocaleTimeString(undefined, options);
+            const hour = localTime.getHours();
+            setIsDaytime(hour >= 7 && hour < 19);
+
             setFormattedTime(timeString); // Update the state with the formatted time
 
 
@@ -101,6 +106,10 @@ const WeatherApp = () => {
         fetchData(element[0].value);
     };
 
+    console.log(isDaytime)
+    const containerStyle = {
+        background: isDaytime ? 'linear-gradient(180deg, #FFA500 0%, #FFD700 100%)' : 'linear-gradient(180deg, #130754 0%, #3b2f80 100%)'
+    };
 
 
     // const timezoneOffset = data.timezone;
@@ -123,7 +132,7 @@ const WeatherApp = () => {
 
 
     return (
-        <div className='container'>
+        <div className='container' style={containerStyle}>
             <div className="top-bar">
                 <input type="text" className="cityInput" placeholder='Search' />
                 <div className="searchIcon" onClick={handleSearch}>
