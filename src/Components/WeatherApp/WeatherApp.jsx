@@ -14,6 +14,7 @@ const WeatherApp = () => {
     const apiKey = "da74117caa2f7eab25c2aa854c1a2b54";
     const [wicon, setWicon] = useState(cloud_icon);
     const [weatherData, setWeatherData] = useState(null);
+    const [location, setLocation] = useState(null);
     const [city, setCity] = useState('London');
     const [formattedTime, setFormattedTime] = useState('');
     const [isDaytime, setIsDaytime] = useState(false);
@@ -27,7 +28,7 @@ const WeatherApp = () => {
         const urlSearch = `http://api.openweathermap.org/geo/1.0/direct?q=${searchCity}&limit=2&appid=${apiKey}`;
         const response = await fetch(urlSearch);
         const locationData = await response.json();
-
+        setLocation(locationData);
         if (locationData.length > 0) {
             const lat = locationData[0].lat;
             const lon = locationData[0].lon;
@@ -145,7 +146,8 @@ const WeatherApp = () => {
             {weatherData && (
                 <>
                     <div className="weatherTemp">{Math.floor(weatherData.main.temp)}°C</div>
-                    <div className="weatherLocation">{weatherData.name}</div>
+                    {/* <div className="weatherLocation">{weatherData.name}</div> */}
+                    <div className="weatherLocation">{location[0].name}</div>
                     <div className="weatherTime">{formattedTime}</div>
                 </>
             )}
